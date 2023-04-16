@@ -1,17 +1,24 @@
 import React from 'react';
 import { MarkerType, Position, Node } from 'reactflow';
 
-interface NodeData {
-    function: string;
+export interface NodeData {
+    nodeFunction : EFunction_Types;
+}
+
+export enum EFunction_Types {
+    UNKOWN=-1,
+    CONCAT,
+    LERP,
+    input,
 }
 
 export const nodes = [
     {
         id: '1',
-        type: 'animNode',
+        type: 'anim-node-input',
         data: {
             nodeData : {
-                function: 'input',
+                nodeFunction: 'input',
             } as NodeData,
             
         },
@@ -20,27 +27,27 @@ export const nodes = [
     },
     {
         id: '2',
-        type: 'animNode',
+        type: 'anim-node-input',
         data: {
             nodeData :  {
-                function: 'input',
+                nodeFunction: 'input',
             } as NodeData,
         },
         position: { x: 0, y: 175 },
         sourcePosition: 'right',
     },
     {
-        id: '4',
-        type: 'animNode',
+        id: '3',
+        type: 'anim-node-function',
         position: { x: 400, y: 75 },
         data: {
             nodeData :  {
-                function: 'concat',
+                nodeFunction: EFunction_Types.CONCAT,
             } as NodeData,
         },
     },
     {
-        id: '5',
+        id: '4',
         type: 'output',
         data: {
             label: 'Output Node',
@@ -51,34 +58,7 @@ export const nodes = [
 ] as Node[];
 
 export const edges = [
-    { id: 'e1-2', source: '1', target: '2', label: 'this is an edge label' },
-    { id: 'e1-3', source: '1', target: '3', animated: true },
-    {
-        id: 'e4-5',
-        source: '4',
-        target: '5',
-        type: 'smoothstep',
-        sourceHandle: 'handle-0',
-        data: {
-            selectIndex: 0,
-        },
-        markerEnd: {
-            type: MarkerType.ArrowClosed,
-        },
-    },
-    {
-        id: 'e4-6',
-        source: '4',
-        target: '6',
-        type: 'smoothstep',
-        sourceHandle: 'handle-1',
-        data: {
-            selectIndex: 1,
-        },
-        markerEnd: {
-            type: MarkerType.ArrowClosed,
-        },
-    },
+    
 ];
 
 export const animNodes = [

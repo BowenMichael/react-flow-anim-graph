@@ -1,5 +1,6 @@
 import {Handle, Position, useReactFlow, useStoreApi} from "reactflow";
-import {ChangeEvent, ChangeEventHandler, memo, useCallback} from "react";
+import {ChangeEvent, ChangeEventHandler, memo, useCallback, useState} from "react";
+import {NodeData} from "../elements";
 
 const options = [
     {
@@ -67,7 +68,7 @@ const AnimSelect = (params : { value: string, handleId : string, nodeId : string
                         },
                     };
                 }
-
+                console.log('node', node.data.animData, evt?.target.value)
                 return node;
             })
         );
@@ -95,9 +96,10 @@ const AnimSelect = (params : { value: string, handleId : string, nodeId : string
 function AnimNode(params : { id : string, data : any }) {
     const { id, data } = params;
     const handleForFunction = 'function'
-    const currentOption : IAnimOptions = animOptions[animOptions.findIndex((option) => option.value === data.nodeData.function)]
+    let optionSelectIndex = animOptions.findIndex((option) => option.value === data.nodeData.function);
+    const [currentOption, setCurrentOption] = useState<IAnimOptions>(animOptions[optionSelectIndex >= 0 ? optionSelectIndex : 0]);
     console.log(currentOption);
-    
+    const [userInput, setUserInput] = useState<{nodeData : NodeData}>({nodeData : {nodeFunction : 'input'} as NodeData});
     const { setNodes } = useReactFlow();
     const store = useStoreApi();
     
@@ -111,11 +113,16 @@ function AnimNode(params : { id : string, data : any }) {
                     if (node.id === id) {
                         node.data = {
                             ...node.data,
-                            animData: {
+                            nodeData: {
                                 ...node.data.selects,
                                 params : evt?.target.value,
                             },
                         };
+                        
+                        //Update Local state
+                        optionSelectIndex = animOptions.findIndex((option) => option.value === data.nodeData.function);
+                        setCurrentOption(animOptions[optionSelectIndex >= 0 ? optionSelectIndex : 0])
+                        setUserInput(node.data)
                     }
 
                     return node;
@@ -124,8 +131,8 @@ function AnimNode(params : { id : string, data : any }) {
             return;
         }
         
-        console.log(evt.target.id)
-        console.log(evt.target.value);
+       /* console.log(evt.target.id)
+        console.log(evt.target.value);*/
     }, []);
 
     return (
@@ -133,7 +140,7 @@ function AnimNode(params : { id : string, data : any }) {
             <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
                 <div className="flex">
                     <div className="ml-2">
-                        <div className="text-lg font-bold text-gray-500">This is a <strong>custom node</strong></div>
+                        <div className="text-lg font-bold text-gray-500"><strong>{userInput.t} Node</strong></div>
                         <div className="text-gray-500">
                             
                             <AnimSelect key={data.nodeData.function} nodeId={id} value={data.nodeData.function} handleId={data.nodeData.function} />

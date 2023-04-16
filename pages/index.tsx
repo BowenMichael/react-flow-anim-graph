@@ -1,22 +1,26 @@
-﻿import React, {MouseEvent as ReactMouseEvent, MouseEventHandler, useCallback, useEffect, useRef, useState} from 'react';
+﻿import React, {MouseEvent as ReactMouseEvent, useCallback, useEffect, useRef, useState} from 'react';
 import ReactFlow, {
-    useNodesState,
-    useEdgesState,
     addEdge,
-    Controls,
-    MiniMap,
     Background,
+    BackgroundVariant,
     Connection,
-    Edge, BackgroundVariant, updateEdge
+    Controls,
+    Edge,
+    MiniMap,
+    updateEdge,
+    useEdgesState,
+    useNodesState
 } from 'reactflow';
 
-import { nodes as initialNodes, edges as initialEdges } from '../components/graph/elements';
+import {edges as initialEdges, EFunction_Types, NodeData, nodes as initialNodes} from '../components/graph/elements';
 
 import 'reactflow/dist/style.css';
-import AnimNode from "../components/graph/nodes/AnimNode";
+import AnimNode from "../components/graph/nodes/anim-node";
+import {Button, Container, Navbar} from "react-bootstrap";
 
 const nodeTypes = {
-    animNode: AnimNode,
+    "anim-node-function": AnimNode,
+    "anim-node-input": AnimNode,
 };
 
 export default function App() {
@@ -48,8 +52,8 @@ export default function App() {
         const id = (nodes.length + 1).toString();
         const newNode = {
             id,
-            type: 'animNode',
-            data: { nodeData: { function: 'input', params: [] } },
+            type: 'anim-node-function',
+            data: { nodeData: { nodeFunction: EFunction_Types.input, params: [] } as NodeData },
             position: { x: 250, y: 5 },
         };
 
@@ -83,9 +87,14 @@ export default function App() {
 
     return (
         <>
-            <div className={'bg-gray-100 w-12 text-gray-500 '}>
-                <button className={'rounded-full w-100'} onClick={createAnimNode}>Create Anim Node</button>
-            </div>
+            <Navbar bg="dark" variant="dark">
+                <Container>
+                    <Navbar.Brand href="#home">React-Flow Test</Navbar.Brand>
+                    <Navbar.Text>                
+                        <Button className={'rounded-full w-100'} onClick={createAnimNode}>Create Anim Node</Button>
+                    </Navbar.Text>
+                </Container>
+            </Navbar>
             <div style={{width: '100vw', height: '100vh'}}>
                 <ReactFlow nodes={nodes}
                            edges={edges}
