@@ -1,6 +1,14 @@
-import {Handle, Position, useReactFlow, useStoreApi} from "reactflow";
+import {
+    Handle,
+    Position,
+    ReactFlowInstance,
+    ReactFlowJsonObject,
+    ReactFlowState,
+    useReactFlow,
+    useStoreApi
+} from "reactflow";
 import {ChangeEvent, memo, useEffect, useState} from "react";
-import {EFunction_Types} from "../elements";
+import {EFunction_Types, NodeData} from "../elements";
 import {Button, Col, Container, Row, Form} from "react-bootstrap";
 
 interface IAnimOptions {
@@ -10,7 +18,7 @@ interface IAnimOptions {
     params: number;
 }
 
-const animOptions = [
+export const animOptions = [
     {
         value: EFunction_Types.CONCAT,
         label: 'Concat',
@@ -33,7 +41,7 @@ const animOptions = [
 
 function AnimNode(params : { id : string, data : any }) {
     const {id, data} = params;
-    const { setNodes, getNode } = useReactFlow();
+    const { setNodes, getNode, setEdges } = useReactFlow();
     const store = useStoreApi();
     const [inputs, setInputs] = useState(0);
     const [inputParamsCount, setInputParamsCount] = useState(0);
@@ -41,15 +49,15 @@ function AnimNode(params : { id : string, data : any }) {
     const [functionType, setFunctionType] = useState<EFunction_Types>(EFunction_Types.UNKOWN);
     const [loaded, setLoaded] = useState(false);
     
-    const current = getNode(id);
+    const current  = getNode(id);
     
     useEffect(() =>
     {
         if(!loaded){
-            UpdateNodeState(current?.data?.type ?? EFunction_Types.CONCAT);
+            UpdateNodeState(current?.data?.nodeData.nodeFunction ?? EFunction_Types.CONCAT);
             setLoaded(true)
         }
-    }, []);
+    }, [loaded]);
 
     
     
@@ -60,6 +68,7 @@ function AnimNode(params : { id : string, data : any }) {
         setFunctionType(newType?.value ?? EFunction_Types.UNKOWN);
         setInputParamsCount(newType?.params ?? 0);
         setInputParams(Array.from(Array(newType?.params ?? 0).keys()).map((i) => String.fromCharCode(i+65).toLowerCase()));
+        setLoaded(false);
     }
     
     function UpdateParamValue(e : ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index : number) {
@@ -71,6 +80,11 @@ function AnimNode(params : { id : string, data : any }) {
     function OnNodeTypeChange(e : ChangeEvent<HTMLSelectElement>) {
         console.log('OnNodeTypeChange', e.currentTarget.value as number);
         UpdateNodeState(e.currentTarget.value as number);
+        setEdges((edgs)=>{
+            return edgs.filter((edg)=>{
+                return edg.sourceNode?.id != id || edg.targetNode?.id != id;
+            })
+        })
     }
     
     if(!loaded) return <></>
@@ -95,7 +109,7 @@ function AnimNode(params : { id : string, data : any }) {
                                     setInputs(inputs + 1);
                                 }
                             }}>Add Output {inputs}</Button>
-                            <Form.Select aria-label="Default select example" onChange={OnNodeTypeChange}>
+                            <Form.Select aria-label="Default select example" value={functionType} onChange={OnNodeTypeChange}>
                                 {
                                     animOptions.map((option) => (
                                         <option value={option.value} key={option.value}>{option.label}</option>
@@ -104,7 +118,9 @@ function AnimNode(params : { id : string, data : any }) {
                             </Form.Select>
                             
                             { // region inputs
-                                inputs > 0 && Array.from(Array(inputParamsCount).keys()).map((i) => {
+                                inputParamsCount > 0 && Array.from(Array(inputParamsCount).keys()).map((i) => {
+                                    console.log(inputParamsCount)
+                                    
                                     return (
                                         <div key={i}>
                                             <Form.Control  type="text" placeholder="Enter Input" onChange={(e)=>UpdateParamValue(e, i)}/>

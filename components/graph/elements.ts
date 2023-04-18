@@ -18,7 +18,7 @@ export const nodes = [
         type: 'anim-node-input',
         data: {
             nodeData : {
-                nodeFunction: 'input',
+                nodeFunction: EFunction_Types.input,
             } as NodeData,
             
         },
@@ -30,7 +30,7 @@ export const nodes = [
         type: 'anim-node-input',
         data: {
             nodeData :  {
-                nodeFunction: 'input',
+                nodeFunction: EFunction_Types.input,
             } as NodeData,
         },
         position: { x: 0, y: 175 },
@@ -47,7 +47,7 @@ export const nodes = [
         },
     },
     {
-        id: '4',
+        id: '0',
         type: 'output',
         data: {
             label: 'Output Node',

@@ -15,8 +15,10 @@ import ReactFlow, {
 import {edges as initialEdges, EFunction_Types, NodeData, nodes as initialNodes} from '../components/graph/elements';
 
 import 'reactflow/dist/style.css';
-import AnimNode from "../components/graph/nodes/anim-node";
-import {Button, Container, Navbar} from "react-bootstrap";
+import AnimNode, {animOptions} from "../components/graph/nodes/anim-node";
+import {Button, ButtonGroup, Container, Navbar} from "react-bootstrap";
+
+
 
 const nodeTypes = {
     "anim-node-function": AnimNode,
@@ -42,10 +44,25 @@ export default function App() {
 
     }, []);
     
-    const onConnect = useCallback((params : Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+    const onConnect = useCallback((params : Edge<any> | Connection) => {
+        setEdges((eds) => {
+            const newEdge : Edge[] = addEdge(params, eds)
+            console.log("New edge", eds, edges, newEdge)
+            setEdges(newEdge)
+            setLoaded(false)
+            return newEdge;
+        })
+        console.log("New Connection", edges, params)
+        
+    }, [setEdges]);
     const onDoubleClick = useCallback((event : ReactMouseEvent, edg : Edge) => {
-        console.log("Double Click")
-        setEdges((eds) => edges.filter(e => e.id != edg.id))
+        console.log("Double Click", edg.id)
+        setEdges((eds)=>{
+            return eds.filter(e => {
+                return e.id !== edg.id;
+            });
+        });
+        
     }, [setEdges]);
 
     function createAnimNode() {
@@ -65,6 +82,7 @@ export default function App() {
     // region delete edge on drop
     const onEdgeUpdateStart = useCallback(() => {
         edgeUpdateSuccessful.current = false;
+        
     }, []);
 
     const onEdgeUpdate = useCallback((oldEdge : Edge<any>, newConnection : Connection) => {
@@ -85,13 +103,60 @@ export default function App() {
     
     // endregion
 
+    function sameAnimGraph() {
+        const output = {
+            "nodes" : [
+                nodes.map((value, index, nodeArray) => {
+                    const data = (value.data.nodeData as NodeData);
+                    console.log(data)
+                    let inputNodes= [];
+                    edges.map((edge, index) => {
+                        debugger;
+                        
+                        if(edge.target === value.id){
+                            inputNodes = [...inputNodes,  {
+                                  index : edge.source
+                            }]
+                        }
+                    })
+
+                    let animData;
+                    if(data){
+                        animData = animOptions[Number(data.nodeFunction)];
+                        console.log(animData)  
+                    }
+                    
+                    
+                    return {
+                        id : value.id,
+                        data : animData,
+                        inputs : inputNodes
+                        
+                    }
+                })
+            ]
+        }
+
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([JSON.stringify(output, null, 2)], {
+            type: "text/plain"
+        }));
+        a.setAttribute("download", "data.txt");
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
     return (
         <>
             <Navbar bg="dark" variant="dark">
                 <Container>
                     <Navbar.Brand href="#home">React-Flow Test</Navbar.Brand>
-                    <Navbar.Text>                
-                        <Button className={'rounded-full w-100'} onClick={createAnimNode}>Create Anim Node</Button>
+                    <Navbar.Text>
+                        <ButtonGroup>
+                            <Button className={'w-100'} onClick={createAnimNode} variant={'success'}>Create Anim Node</Button>
+                            <Button className={'w-100'} onClick={sameAnimGraph}>Save Anim Graph</Button>
+                        </ButtonGroup>
                     </Navbar.Text>
                 </Container>
             </Navbar>
