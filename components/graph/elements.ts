@@ -3,6 +3,7 @@ import { MarkerType, Position, Node } from 'reactflow';
 
 export interface NodeData {
     nodeFunction : EFunction_Types;
+    inputParams: string[]
 }
 
 export enum EFunction_Types {

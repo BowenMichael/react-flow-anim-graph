@@ -48,51 +48,76 @@ function AnimNode(params : { id : string, data : any }) {
     const [inputParams, setInputParams] = useState<string[]>([]);
     const [functionType, setFunctionType] = useState<EFunction_Types>(EFunction_Types.UNKOWN);
     const [loaded, setLoaded] = useState(false);
+    const [loadedHeight, setLoadedHeight] = useState(false);
     
     const current  = getNode(id);
-    
+    let nodeHeight = window.document.getElementById('animCard-'+current?.id)?.clientHeight
+
     useEffect(() =>
     {
         if(!loaded){
             UpdateNodeState(current?.data?.nodeData.nodeFunction ?? EFunction_Types.CONCAT);
+            nodeHeight = window.document.getElementById('animCard-'+current?.id)?.clientHeight
+
             setLoaded(true)
+        }else if(!loadedHeight){
+            nodeHeight = window.document.getElementById('animCard-'+current?.id)?.clientHeight
+            setLoadedHeight(true)
         }
-    }, [loaded]);
+    }, [loaded, nodeHeight]);
 
     
     
     function UpdateNodeState(newNodeType : number) {
-        const newType = animOptions.find((option) => option.value as number == newNodeType);
+        const newType = animOptions.at(newNodeType );
         console.log('newType', newType)
+        debugger
         setInputs(newType?.inputs ?? 0);
         setFunctionType(newType?.value ?? EFunction_Types.UNKOWN);
         setInputParamsCount(newType?.params ?? 0);
-        setInputParams(Array.from(Array(newType?.params ?? 0).keys()).map((i) => String.fromCharCode(i+65).toLowerCase()));
-        setLoaded(false);
+        setInputParams([]);
+        setNodes((nodes)=>{
+            return nodes.map((node)=>{
+                if(node.id == id){
+                    node.data.nodeData.nodeFunction = newNodeType;
+                    node.data.nodeData.inputParams = inputParams;
+                }
+                return node;
+            })
+        })
+
     }
     
     function UpdateParamValue(e : ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index : number) {
         console.log('UpdateParamValue', e.currentTarget.value);
         inputParams[index] = e.currentTarget.value;
         setInputParams(inputParams);
+        setNodes((nodes)=>{
+            return nodes.map((node)=>{
+                if(node.id == id){
+                    node.data.nodeData.inputParams = inputParams;
+                }
+                return node;
+            })
+        })
     }
 
     function OnNodeTypeChange(e : ChangeEvent<HTMLSelectElement>) {
-        console.log('OnNodeTypeChange', e.currentTarget.value as number);
-        UpdateNodeState(e.currentTarget.value as number);
+        UpdateNodeState(e.currentTarget.value as unknown as number);
         setEdges((edgs)=>{
             return edgs.filter((edg)=>{
                 return edg.sourceNode?.id != id || edg.targetNode?.id != id;
             })
         })
+
     }
     
-    if(!loaded) return <></>
+    if(!loaded && loadedHeight) return <></>
     
     console.log(current?.style?.height)
-    
+
     return (
-        <>
+        <div id={`animCard-${current?.id}`}>
             <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
                 <Container>
                     <Row>
@@ -104,11 +129,11 @@ function AnimNode(params : { id : string, data : any }) {
                                 
                                 
                             </Row>
-                            <Button onClick={() => {
+               {/*             <Button onClick={() => {
                                 if(inputs < 6){
                                     setInputs(inputs + 1);
                                 }
-                            }}>Add Output {inputs}</Button>
+                            }}>Add Output {inputs}</Button>*/}
                             <Form.Select aria-label="Default select example" value={functionType} onChange={OnNodeTypeChange}>
                                 {
                                     animOptions.map((option) => (
@@ -143,17 +168,23 @@ function AnimNode(params : { id : string, data : any }) {
                     const id = String.fromCharCode(i+65).toLowerCase()
                     console.log(i,id)
 
-                    return(
-                        <Handle key={id} type="target" style={{top: 10 + ((10)* i) }} id={id} position={Position.Left} isConnectable={true}/>
-                    )
+                    if (loaded && nodeHeight ) {
+                        // Client-side-only code
+                        console.log(nodeHeight) 
+                        //debugger    
+                        
+                        return(
+                            <Handle className={'handle'} key={id} type="target" style={{top:  /*nodeHeight / 12 + (nodeHeight / inputs) **/ i * 20}} id={id} position={Position.Left} isConnectable={true}/>
+                        )
+                    }
                 })
                 
               // endregion
             }
 
 
-            <Handle key={id} type={'source'}  id={id} position={Position.Right}  isConnectable={true}/>
-        </>
+            <Handle className={'handle'} key={id} type={'source'}  id={id} position={Position.Right}  isConnectable={true}/>
+        </div>
     )
 }
 

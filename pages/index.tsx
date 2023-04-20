@@ -70,7 +70,7 @@ export default function App() {
         const newNode = {
             id,
             type: 'anim-node-function',
-            data: { nodeData: { nodeFunction: EFunction_Types.input, params: [] } as NodeData },
+            data: { nodeData: { nodeFunction: EFunction_Types.input, params: []  }},
             position: { x: 250, y: 5 },
         };
 
@@ -109,7 +109,7 @@ export default function App() {
                 nodes.map((value, index, nodeArray) => {
                     const data = (value.data.nodeData as NodeData);
                     console.log(data)
-                    let inputNodes= [];
+                    let inputNodes:any[]= [];
                     edges.map((edge, index) => {
                         debugger;
                         
@@ -126,10 +126,12 @@ export default function App() {
                         console.log(animData)  
                     }
                     
+                    const params = data?.inputParams ? data.inputParams : [];
                     
                     return {
                         id : value.id,
                         data : animData,
+                        params ,
                         inputs : inputNodes
                         
                     }
