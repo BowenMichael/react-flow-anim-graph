@@ -56,13 +56,23 @@ function AnimNode(params : { id : string, data : any }) {
     useEffect(() =>
     {
         if(!loaded){
-            UpdateNodeState(current?.data?.nodeData.nodeFunction ?? EFunction_Types.CONCAT);
+            UpdateNodeState(current?.data?.nodeData.nodeFunction);
+            
             nodeHeight = window.document.getElementById('animCard-'+current?.id)?.clientHeight
 
             setLoaded(true)
         }else if(!loadedHeight){
+            setEdges((edgs)=>{
+                return edgs.filter((edg)=>{
+                    return edg.sourceNode?.id != id || edg.targetNode?.id != id;
+                })
+            })
             nodeHeight = window.document.getElementById('animCard-'+current?.id)?.clientHeight
             setLoadedHeight(true)
+        }
+        else{
+     
+
         }
     }, [loaded, nodeHeight]);
 
@@ -71,7 +81,6 @@ function AnimNode(params : { id : string, data : any }) {
     function UpdateNodeState(newNodeType : number) {
         const newType = animOptions.at(newNodeType );
         console.log('newType', newType)
-        debugger
         setInputs(newType?.inputs ?? 0);
         setFunctionType(newType?.value ?? EFunction_Types.UNKOWN);
         setInputParamsCount(newType?.params ?? 0);
@@ -174,7 +183,7 @@ function AnimNode(params : { id : string, data : any }) {
                         //debugger    
                         
                         return(
-                            <Handle className={'handle'} key={id} type="target" style={{top:  /*nodeHeight / 12 + (nodeHeight / inputs) **/ i * 20}} id={id} position={Position.Left} isConnectable={true}/>
+                            <Handle className={'handle'} key={id + i} type="target" style={{top:  /*nodeHeight / 12 + (nodeHeight / inputs) **/ i * 20}} id={id + i} position={Position.Left} isConnectable={true}/>
                         )
                     }
                 })
@@ -183,7 +192,7 @@ function AnimNode(params : { id : string, data : any }) {
             }
 
 
-            <Handle className={'handle'} key={id} type={'source'}  id={id} position={Position.Right}  isConnectable={true}/>
+            <Handle className={'handle'} key={id+ 'Output'} type={'source'}  id={id + 'Output'} position={Position.Right}  isConnectable={true}/>
         </div>
     )
 }

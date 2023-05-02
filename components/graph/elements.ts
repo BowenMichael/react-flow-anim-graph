@@ -15,39 +15,6 @@ export enum EFunction_Types {
 
 export const nodes = [
     {
-        id: '1',
-        type: 'anim-node-input',
-        data: {
-            nodeData : {
-                nodeFunction: EFunction_Types.input,
-            } as NodeData,
-            
-        },
-        position: { x: 0, y: 0 },
-        sourcePosition: 'right',
-    },
-    {
-        id: '2',
-        type: 'anim-node-input',
-        data: {
-            nodeData :  {
-                nodeFunction: EFunction_Types.input,
-            } as NodeData,
-        },
-        position: { x: 0, y: 175 },
-        sourcePosition: 'right',
-    },
-    {
-        id: '3',
-        type: 'anim-node-function',
-        position: { x: 400, y: 75 },
-        data: {
-            nodeData :  {
-                nodeFunction: EFunction_Types.CONCAT,
-            } as NodeData,
-        },
-    },
-    {
         id: '0',
         type: 'output',
         data: {

@@ -18,8 +18,6 @@ import 'reactflow/dist/style.css';
 import AnimNode, {animOptions} from "../components/graph/nodes/anim-node";
 import {Button, ButtonGroup, Container, Navbar} from "react-bootstrap";
 
-
-
 const nodeTypes = {
     "anim-node-function": AnimNode,
     "anim-node-input": AnimNode,
@@ -66,7 +64,7 @@ export default function App() {
     }, [setEdges]);
 
     function createAnimNode() {
-        const id = (nodes.length + 1).toString();
+        const id = (nodes.length).toString();
         const newNode = {
             id,
             type: 'anim-node-function',
@@ -105,13 +103,12 @@ export default function App() {
 
     function sameAnimGraph() {
         const output = {
-            "nodes" : [
+            "nodes" : 
                 nodes.map((value, index, nodeArray) => {
                     const data = (value.data.nodeData as NodeData);
                     console.log(data)
                     let inputNodes:any[]= [];
                     edges.map((edge, index) => {
-                        debugger;
                         
                         if(edge.target === value.id){
                             inputNodes = [...inputNodes,  {
@@ -136,7 +133,7 @@ export default function App() {
                         
                     }
                 })
-            ]
+            
         }
 
         const a = document.createElement("a");
@@ -148,12 +145,12 @@ export default function App() {
         a.click();
         document.body.removeChild(a);
     }
-
+    console.log("Render", nodes, edges)
     return (
         <>
             <Navbar bg="dark" variant="dark">
                 <Container>
-                    <Navbar.Brand href="#home">React-Flow Test</Navbar.Brand>
+                    <Navbar.Brand href="#home">Animation Graph Editor</Navbar.Brand>
                     <Navbar.Text>
                         <ButtonGroup>
                             <Button className={'w-100'} onClick={createAnimNode} variant={'success'}>Create Anim Node</Button>
