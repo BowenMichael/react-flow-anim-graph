@@ -7,7 +7,7 @@ import {
     useReactFlow,
     useStoreApi
 } from "reactflow";
-import {ChangeEvent, memo, useEffect, useState, onComponentmou, useLayoutEffect} from "react";
+import {ChangeEvent, memo, useEffect, useState, useLayoutEffect} from "react";
 import {EFunction_Types, NodeData, nodeTypes} from "../elements";
 import {Button, Col, Container, Row, Form} from "react-bootstrap";
 
@@ -50,6 +50,7 @@ function AnimNode(params : { id : string, data : any }) {
     const [functionType, setFunctionType] = useState<EFunction_Types>(EFunction_Types.UNKOWN);
     const [loaded, setLoaded] = useState(false);
     const [loadedHeight, setLoadedHeight] = useState(false);
+    const [nodeHeight, setNodeHeight] = useState(0);
     
     const current  = getNode(id);
 
@@ -68,7 +69,10 @@ function AnimNode(params : { id : string, data : any }) {
 
     useLayoutEffect(() => {
         //console.log('loadedHeight', window.document.getElementById('animCard-'+current?.id)?.clientHeight)
-        setLoadedHeight(window.document.getElementById('animCard-'+current?.id)?.clientHeight)
+        let height = window.document.getElementById('animCard-'+current?.id)?.clientHeight;
+        setNodeHeight(height ? height : 0)
+        setLoadedHeight(true);
+        //setLoadedHeight(height ? height : 0)
     }, [ loadedHeight]);
     
     
@@ -212,7 +216,7 @@ function AnimNode(params : { id : string, data : any }) {
                         //debugger    
                         
                         return(
-                            <Handle className={'handle'} key={id + i} type="target" style={{top:  loadedHeight / (inputs * 2) + (loadedHeight / inputs) * i /* i * 20*/}} id={id + i} position={Position.Left} isConnectable={true}/>
+                            <Handle className={'handle'} key={id + i} type="target" style={{top:  nodeHeight / (inputs * 2) + (nodeHeight / inputs) * i /* i * 20*/}} id={id + i} position={Position.Left} isConnectable={true}/>
                         )
                     }
                 })

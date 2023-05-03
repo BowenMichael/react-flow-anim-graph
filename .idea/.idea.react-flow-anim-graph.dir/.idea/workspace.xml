@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e6c6ff92-aaee-4ccb-84ef-17c7cbd2ddfc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.react-flow-anim-graph.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.react-flow-anim-graph.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/graph/elements.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/graph/elements.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/graph/nodes/anim-node.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/graph/nodes/anim-node.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,9 +30,9 @@
       <option value="$PROJECT_DIR$/components/graph/nodes/AnimNode.tsx" />
       <option value="$PROJECT_DIR$/pages/_app.tsx" />
       <option value="$PROJECT_DIR$/styles/globals.css" />
-      <option value="$PROJECT_DIR$/components/graph/nodes/anim-node.tsx" />
       <option value="$PROJECT_DIR$/pages/index.tsx" />
       <option value="$PROJECT_DIR$/components/graph/elements.ts" />
+      <option value="$PROJECT_DIR$/components/graph/nodes/anim-node.tsx" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="2OVgBNRbgVayH8b0vbhIGTV0Zvc" />
@@ -49,7 +47,7 @@
     <property name="ts.external.directory.path" value="E:\~School\SP23\Animation Programming\repos\react-flow-anim-graph\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected="npm.dev">
+  <component name="RunManager" selected="npm.build">
     <configuration name="build" type="js.build_tools.npm" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -87,7 +85,7 @@
       <workItem from="1681944292240" duration="6475000" />
       <workItem from="1682027017309" duration="1211000" />
       <workItem from="1682966804081" duration="1645000" />
-      <workItem from="1683137872452" duration="3410000" />
+      <workItem from="1683137872452" duration="3825000" />
     </task>
     <servers />
   </component>
