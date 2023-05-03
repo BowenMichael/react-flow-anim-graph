@@ -124,12 +124,14 @@ export default function App() {
                     }
                     
                     const params = data?.inputParams ? data.inputParams : [];
+                    const maskNodes = data?.nodeMask ? data.nodeMask : [];
                     
                     return {
                         id : value.id,
                         data : animData,
                         params ,
-                        inputs : inputNodes
+                        inputs : inputNodes,
+                        maskNodes
                         
                     }
                 })

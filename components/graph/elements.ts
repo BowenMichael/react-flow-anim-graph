@@ -4,6 +4,7 @@ import { MarkerType, Position, Node } from 'reactflow';
 export interface NodeData {
     nodeFunction : EFunction_Types;
     inputParams: string[]
+    nodeMask : string[]
 }
 
 export enum EFunction_Types {
@@ -12,6 +13,12 @@ export enum EFunction_Types {
     LERP,
     input,
 }
+
+export const nodeTypes  = [
+    {type: EFunction_Types.CONCAT, label: 'Concat', paramLabels: []},
+    {type: EFunction_Types.LERP, label: 'Lerp', paramLabels: ['Float 0-1']},
+    {type: EFunction_Types.input, label: 'Input', paramLabels: ['Animation clip name']},
+] as {type: EFunction_Types, label: string, paramLabels: string[]}[];
 
 export const nodes = [
     {
